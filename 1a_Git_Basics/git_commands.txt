@@ -1,0 +1,6 @@
+git status
+git diff
+git add index.html
+git status
+git commit -m "Update portfolio index page"
+git status

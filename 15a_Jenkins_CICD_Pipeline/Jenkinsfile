@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'if not exist index.html exit /b 1'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t q15-app:latest .'
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                bat '''
+                docker stop q15-app 2>NUL
+                docker rm q15-app 2>NUL
+                docker run -d --name q15-app -p 8087:80 q15-app:latest
+                '''
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                bat 'curl -f http://localhost:8087'
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+git clone https://github.com/USERNAME/student-management.git
+git status
+git branch
+git switch -c feature/student
+git add student.py
+git commit -m "Add student feature"
+git push -u origin feature/student

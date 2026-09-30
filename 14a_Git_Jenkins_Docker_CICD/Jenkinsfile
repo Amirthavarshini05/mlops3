@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+        stage('Build') {
+            steps { bat 'docker build -t q14-web:latest .' }
+        }
+        stage('Deploy') {
+            steps {
+                bat '''
+                docker stop q14-web 2>NUL
+                docker rm q14-web 2>NUL
+                docker run -d --name q14-web -p 8086:80 q14-web:latest
+                '''
+            }
+        }
+        stage('Verify') {
+            steps { bat 'curl -f http://localhost:8086' }
+        }
+    }
+}

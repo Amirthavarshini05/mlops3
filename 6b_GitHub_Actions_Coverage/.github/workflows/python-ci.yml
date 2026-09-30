@@ -1,0 +1,49 @@
+name: Python CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Test with coverage
+        run: pytest --cov=. --cov-report=term-missing --cov-report=xml --cov-fail-under=80
+
+      - name: Save coverage report
+        if: always()
+        run: coverage report -m > coverage.txt
+
+      - name: Comment coverage on PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let report = 'Coverage report unavailable.';
+            if (fs.existsSync('coverage.txt')) {
+              report = fs.readFileSync('coverage.txt', 'utf8');
+            }
+            const body = `## Test Coverage Report\n\n\`\`\`\n${report}\n\`\`\`\n\nRequired coverage: 80%`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });

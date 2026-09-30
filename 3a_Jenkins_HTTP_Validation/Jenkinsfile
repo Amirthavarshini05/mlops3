@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                bat '''
+                copy /Y "%WORKSPACE%\index.html" "C:\inetpub\wwwroot\index.html"
+                '''
+            }
+        }
+        stage('Validate') {
+            steps {
+                bat '''
+                curl -s -o NUL -w "HTTP Status: %%{http_code}\n" http://localhost
+                curl -s -o NUL -w "%%{http_code}" http://localhost > status.txt
+                findstr /C:"200" status.txt > NUL
+                if errorlevel 1 (
+                    echo HTTP validation failed.
+                    exit /b 1
+                )
+                echo HTTP 200 OK - Validation successful.
+                '''
+            }
+        }
+    }
+}

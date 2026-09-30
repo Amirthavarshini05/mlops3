@@ -1,0 +1,5 @@
+aws_region        = "ap-south-1"
+ami_id            = "YOUR_VALID_AMI_ID"
+instance_type     = "t2.micro"
+key_name          = "YOUR_KEY_PAIR_NAME"
+model_bucket_name = "YOUR-GLOBALLY-UNIQUE-ML-MODEL-BUCKET"

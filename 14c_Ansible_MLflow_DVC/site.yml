@@ -1,0 +1,8 @@
+---
+- name: Configure MLOps EC2
+  hosts: mlops
+  become: yes
+  roles:
+    - common
+    - mlflow
+    - dvc

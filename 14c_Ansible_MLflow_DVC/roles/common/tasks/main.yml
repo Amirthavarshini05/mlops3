@@ -1,0 +1,19 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install base packages
+  apt:
+    name:
+      - python3.11
+      - python3-pip
+      - git
+      - docker.io
+    state: present
+
+- name: Enable Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes

@@ -1,0 +1,19 @@
+---
+- name: Install MLflow
+  pip:
+    name: mlflow
+
+- name: Install MLflow systemd unit
+  template:
+    src: mlflow.service.j2
+    dest: /etc/systemd/system/mlflow.service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start MLflow
+  systemd:
+    name: mlflow
+    state: started
+    enabled: yes

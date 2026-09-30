@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+        stage('Install Deps') {
+            steps { bat 'python -m pip install -r requirements.txt' }
+        }
+        stage('Run Unit Tests') {
+            steps { bat 'pytest -v' }
+        }
+        stage('Static Analysis') {
+            steps { bat 'flake8 .' }
+        }
+        stage('Deploy to Staging') {
+            steps {
+                bat '''
+                if not exist staging mkdir staging
+                copy /Y app.py staging\app.py
+                copy /Y test_app.py staging\test_app.py
+                '''
+            }
+        }
+    }
+    post {
+        success { echo 'Pipeline completed successfully.' }
+        failure { echo 'Pipeline failed.' }
+    }
+}

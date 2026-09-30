@@ -1,0 +1,6 @@
+---
+- name: Deploy MLOps stack to Kubernetes
+  hosts: local
+  gather_facts: no
+  roles:
+    - ml_stack

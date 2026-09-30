@@ -1,0 +1,9 @@
+---
+- name: Apply ConfigMap
+  shell: kubectl apply -f /tmp/mlops-configmap.yaml
+
+- name: Apply Deployment
+  shell: kubectl apply -f /tmp/mlops-deployment.yaml
+
+- name: Apply Service
+  shell: kubectl apply -f /tmp/mlops-service.yaml

@@ -1,0 +1,25 @@
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+      - src/prepare.py
+      - data/books.csv
+    outs:
+      - data/prepared.csv
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/prepared.csv
+    outs:
+      - model.pkl
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - data/prepared.csv
+      - model.pkl
+    metrics:
+      - metrics.txt

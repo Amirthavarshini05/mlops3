@@ -1,0 +1,17 @@
+---
+- name: Install DVC with S3 support
+  pip:
+    name: dvc[s3]
+
+- name: Create ML project directory
+  file:
+    path: /home/ubuntu/ml-project
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+# After this role runs, initialize/configure the remote as the ubuntu user:
+# cd /home/ubuntu/ml-project
+# dvc init
+# dvc remote add -d storage s3://YOUR-BUCKET/dvc-storage

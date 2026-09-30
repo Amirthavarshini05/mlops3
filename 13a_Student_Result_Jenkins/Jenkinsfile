@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+        stage('Deploy') {
+            steps {
+                bat '''
+                copy /Y "%WORKSPACE%\index.html" "C:\inetpub\wwwroot\index.html"
+                copy /Y "%WORKSPACE%\style.css" "C:\inetpub\wwwroot\style.css"
+                copy /Y "%WORKSPACE%\script.js" "C:\inetpub\wwwroot\script.js"
+                '''
+            }
+        }
+        stage('Verify') {
+            steps {
+                bat 'curl -f http://localhost'
+            }
+        }
+    }
+}
